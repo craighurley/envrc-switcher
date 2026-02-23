@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "envrc-switcher"
+version = "1.0.0"
+description = "Switch between envrc files"
+readme = "README.md"
+requires-python = ">=3.14"
+license = { text = "MIT" }
+dependencies = [
+    "questionary>=2.0",
+]
+
+[project.scripts]
+envrc-switcher = "envrc_switcher.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.15.1",
+    "yamllint>=1.38.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["envrc_switcher"]
+
+[tool.pytest.ini_options]
+addopts = ["-v", "--tb=short"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+extend-exclude = [
+    "temp/",
+    "tmp/",
+    "build/",
+    "dist/",
+    "dist-test/"
+]
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F", "I", "UP", "B", "SIM", "TCH",
+    "C4", "PIE", "RUF", "PTH", "A",
+]
+ignore = [
+    "E501",  # line too long - handled by formatter
+    "B008",  # function call in default argument
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

@@ -1,0 +1,4 @@
+default: true
+MD013: false # line-length - Line length
+MD032: false # blanks-around-lists
+MD040: false # fenced-code-language

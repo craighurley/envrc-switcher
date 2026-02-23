@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# Pytest
+.pytest_cache/
+
+# Ruff
+.ruff_cache/
+
+# Env
+.env

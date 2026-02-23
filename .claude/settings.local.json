@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(envrc-switcher:*)",
+      "Bash(ruff:*)",
+      "Bash(task:*)"
+    ]
+  }
+}
