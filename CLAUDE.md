@@ -27,9 +27,6 @@ Config names are derived using `Path.suffix.lstrip(".")`, so `.envrc.foo` → `f
 This project uses Taskfile instead of Make.
 
 ```shell
-# Format
-task format
-
 # Lint
 task lint
 

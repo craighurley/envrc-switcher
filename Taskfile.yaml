@@ -1,14 +1,17 @@
 version: '3'
 
 vars:
+  PACKAGE_NAME:
+    sh: grep '^name = ' pyproject.toml | sed 's/name = "\(.*\)"/\1/'
   PACKAGE_TEST_DIR: test
-  VENV_DIR: venv
+  VENV_DIR: .venv
 
 tasks:
   build:
     desc: Build distribution package
     cmds:
       - task: clean
+      - task: test
       - python -m build
 
   check-version:
@@ -47,18 +50,15 @@ tasks:
       - task: build
       - python -m twine upload --repository testpypi dist/*
 
-  format:
-    desc: Format code
-    cmds:
-      - ruff format
-
   install:
     desc: Install dependencies
-    cmd: pip install -Ue ".[dev]"
+    cmds:
+      - pip install -Ue ".[dev]"
 
   lint:
     desc: Lint
     cmds:
+      - ruff format
       - ruff check --fix
       - markdownlint -c .markdownlintrc "**/*.md"
       - yamllint -c .yamllint ./
@@ -73,8 +73,8 @@ tasks:
     dir: "{{.PACKAGE_TEST_DIR}}"
     cmds:
       - task: venv-setup
-      - ./{{.VENV_DIR}}/bin/pip install -U ../dist/envrc_switcher-*.whl
-      - ./{{.VENV_DIR}}/bin/envrc-switcher --version
+      - ./{{.VENV_DIR}}/bin/pip install -U ../dist/{{.PACKAGE_NAME}}-*.whl
+      - ./{{.VENV_DIR}}/bin/{{.PACKAGE_NAME}} --version
       - task: venv-clean
 
   validate-pypi-package:
@@ -86,8 +86,8 @@ tasks:
     cmds:
       - task: venv-setup
       - echo "{{.TAG}}" | grep -E "^[0-9]+\.[0-9]+\.[0-9]+"
-      - ./{{.VENV_DIR}}/bin/pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple envrc-switcher=={{.TAG}}
-      - ./{{.VENV_DIR}}/bin/envrc-switcher --version
+      - ./{{.VENV_DIR}}/bin/pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple {{.PACKAGE_NAME}}=={{.TAG}}
+      - ./{{.VENV_DIR}}/bin/{{.PACKAGE_NAME}} --version
       - task: venv-clean
 
   venv-clean:
